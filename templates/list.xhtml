@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j">
+    
+    <rich:panel id="panel[DOMAIN]" switchType="client" oncollapse="return false;" rendered="#{[BEAN].PESQUISADO}">
+    			
+    	<f:facet name="header">Lista [TITULO]</f:facet>
+        
+        <a4j:outputPanel id="outputMessagesInFormLista">
+            <h:messages id="messagesInForm[DOMAIN]" styleClass="message" globalOnly="true"
+                        errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+                        rendered="#{not empty [BEAN].listaPaginada and showGlobalMessages != 'false'}" />
+        </a4j:outputPanel>
+        <a4j:form id="formLista">
+        
+			<div align="right">
+				<h:panelGrid columns="4">
+					<ui:decorate template="../templates/templateButtonsList.xhtml">
+						<ui:param name="bean" value="#{[BEAN]}" />
+						<ui:param name="NomeEntidade" value="[DOMAIN]" />
+						<ui:param name="lista" value="#{[BEAN].listaPaginada}" />
+					</ui:decorate>
+					
+
+                    <ui:decorate template="../templates/paginated_navigator.xhtml">
+                        <ui:param name="paginatedList" value="#{[BEAN].listaPaginada}" />
+	                    <ui:param name="idPanel" value="panel[DOMAIN]"/>
+	                    <ui:param name="idDataTable" value="[DOMAIN]DataTable" />
+	                </ui:decorate>	
+				</h:panelGrid>
+			</div>
+			
+			<rich:dataTable id="[DOMAIN]DataTable" 
+				rows="#{[BEAN].listaPaginada.pageSize}"
+				value="#{[BEAN].listaPaginada.dataModel}" 
+				var="_[UNDER_DOMAIN]" 
+				rendered="#{[BEAN].listaPaginada.rowCount > 0}"
+				onRowMouseOver="this.style.backgroundColor='#F1F1F1'"
+				onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+				
+				<rich:column width="10px" rendered="#{sabiusActionAuthorization.hasPermission('alterar', facesContext)}">
+					<h:selectBooleanCheckbox id="ck[DOMAIN]" 
+							value="#{[BEAN].mapExcluir[_[UNDER_DOMAIN]]}"
+							onclick="desmarcarCkTodas(this.form,'ckTodas')" />
+				</rich:column>
+				
+				<!--AS COLUNAS DA LISTA IRÃO FICAR AQUI. O EXEMPLO A SEGUIR REFERE-SE A TABELA UNIURG_VEICULOS:
+					<rich:column width="30%">
+					<f:facet name="header">Código</f:facet>
+                    <a4j:commandLink value="#{_uniurgVeiculos.codVeiculo}" 
+                                     reRender="messagesRegion, mpFormUniurgVeiculos" ajaxSingle="true" imediate="true"
+                                     action="#{uniurgVeiculosBean.setEntidade(_uniurgVeiculos)}"
+					 		rendered="#{sabiusActionAuthorization.hasPermission('alterar', facesContext)}"
+                                     oncomplete="Richfaces.showModalPanel('alterarConfirmModalPanelUniurgVeiculos')" />
+					 		
+                    <a4j:commandLink value="#{_uniurgVeiculos.codVeiculo}" 
+                                     reRender="messagesRegion, mpFormUniurgVeiculos" ajaxSingle="true" imediate="true"
+                                     action="#{uniurgVeiculosBean.setEntidade(_uniurgVeiculos)}"
+					 		rendered="#{!sabiusActionAuthorization.hasPermission('alterar', facesContext)}"
+                                     oncomplete="Richfaces.showModalPanel('mpFormUniurgVeiculos')" >
+                        <f:setPropertyActionListener target="#{uniurgVeiculosBean.estadoNavegacao.estadoAtual}"
+                                                     value="#{uniurgVeiculosBean.estadoNavegacao.DETALHAR}" />
+					</a4j:commandLink>					 		
+				</rich:column>
+                <rich:column width="70%">
+                    <f:facet name="header">Descrição</f:facet>
+                    <a4j:commandLink value="#{_uniurgVeiculos.nomeVeiculo}" 
+                                     reRender="messagesRegion, mpFormUniurgVeiculos" ajaxSingle="true" imediate="true"
+                                     action="#{uniurgVeiculosBean.setEntidade(_uniurgVeiculos)}"
+                                     rendered="#{sabiusActionAuthorization.hasPermission('alterar', facesContext)}"
+                                     oncomplete="Richfaces.showModalPanel('alterarConfirmModalPanelUniurgVeiculos')" />
+				 	<a4j:commandLink value="#{_uniurgVeiculos.nomeVeiculo}" 
+                                     reRender="messagesRegion, mpFormUniurgVeiculos" ajaxSingle="true" imediate="true"
+                                     action="#{uniurgVeiculosBean.setEntidade(_uniurgVeiculos)}"
+                                     rendered="#{!sabiusActionAuthorization.hasPermission('alterar', facesContext)}"
+                                     oncomplete="Richfaces.showModalPanel('mpFormUniurgVeiculos')" >
+                        <f:setPropertyActionListener target="#{uniurgVeiculosBean.estadoNavegacao.estadoAtual}"
+                                                     value="#{uniurgVeiculosBean.estadoNavegacao.DETALHAR}" />
+                    </a4j:commandLink>
+				</rich:column>
+				-->
+			</rich:dataTable>
+			
+			<br/>
+			
+			<div align="left">
+				<a4j:outputPanel rendered="#{sabiusActionAuthorization.hasPermission('alterar', facesContext)}">
+                    <h:panelGrid columns="2" rendered="#{[BEAN].listaPaginada.rowCount > 0}">
+						<h:selectBooleanCheckbox id="ckTodas" onclick="checkAll(this.form, this.checked);"/>
+						<h:outputLabel styleClass="negritopreto" value="Marcar/Desmarcar Todas" for="ckTodas"/>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</div>
+			
+			<ui:decorate template="../templates/paginator_count.xhtml">
+                <ui:param name="lista" value="#{[BEAN].listaPaginada}" />
+            </ui:decorate>
+		</a4j:form>
+   	</rich:panel>
+</ui:composition>
