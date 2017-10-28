@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:sabius="http://www.unimedfortaleza.com.br/sabius"
+    template="../templates/template.xhtml">
+
+    <ui:define name="titulo"> [TITULO] </ui:define>
+    <ui:define name="body">
+		<h:inputHidden id ="cod_atividade" value="[COD_ATIVIDADE]"/>
+    	<a4j:keepAlive beanName="[BEAN]" />
+    	<div style="width: 96%; margin-left: 20px;"> 	
+			<rich:panel id="[DOMAIN]TogglePanel" switchType="client" oncollapse="return false;" >
+				<f:facet name="header">Filtros da pesquisa das(os) [TITULO]</f:facet>
+                      <a4j:outputPanel id="outputMessagesInIndex">
+                             <h:messages id="messagesInIndex" styleClass="message" globalOnly="true"
+	                        errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+	                        rendered="#{[BEAN].PESQUISAR}" />
+                       </a4j:outputPanel>
+
+                    <a4j:form id="formPesquisa">
+                    	<h:panelGrid cellpadding="0" cellspacing="0" style="padding-top: 3px;">
+		    			
+		    			<!--OS INPUTS IRÃO FICAR AQUI. OS EXEMPLOS A SEGUIR É DA TABELA UNIURG_VEICULOS,
+							QUE TEM COMO CHAVE PRIMARIA COD_UNIMED E COD_VEICULO E SUA DESCRIÇÃO NOME_VEICULO:
+							NA PARTE QUE DA CONSULTA DEVE-SE UTILIZAR SEMPRE entidadeBean.entidadePesquisa.	
+
+						OBS.: editSemValidacaoGenerics.xhml É USADO PARA QUANDO HOUVER UMA REQUISIÇÃO OS CAMPOS NÃO SERÃO VALIDADOS 	
+						<sabius:unimedOpt id="idComponenteUnimed" 
+                                                  cssColumnClassesOpt="editCollum92pxRigth"
+                                                  required="false"
+                                                  template="editSemValidacaoGenerics.xhtml"
+                                                  valueCodUnimed="#{uniurgVeiculosBean.entidadePesquisa.paramUnimed.codUnimed}" 
+                                                  valueNomeAbrev="#{uniurgVeiculosBean.entidadePesquisa.paramUnimed.nomeAbrev}"
+                                                  title="da Unimed Produto"
+                                                  styleClass="#{(!uniurgVeiculosBean.PESQUISAR)? 'disabledVerde' : ''}"
+                                                  focus="codigoProduto" reRender="outputMessagesInForm" label=" Unimed:">
+                         </sabius:unimedOpt> 
+                        <ui:decorate template="../templates/editSemValidacaoGenerics.xhtml">
+                            <ui:param name="idComponente" value="codUniurgVeiculos"/>
+                            <ui:param name="idComponente2" value="UniurgVeiculosNome"/>
+                            <ui:param name="cssColumnClasses" value="editCollum92pxRigth" />
+                            <ui:define name="label">Código: </ui:define>
+                            <h:inputText id="codUniurgVeiculos"
+                                         value="#{uniurgVeiculosBean.entidadePesquisa.codVeiculo}" 
+                                         size="10" 
+                                         maxlength="10"
+                                         style="text-transform: uppercase;"
+                                         onkeypress="return(soEntraLetrasNumero(event,this));"
+                                         readonly="#{!uniurgVeiculosBean.PESQUISAR}"
+                                         styleClass="#{(!uniurgVeiculosBean.PESQUISAR)? 'disabledVerde' : ''}"
+                                         onmouseout="soEntraLetrasNumero(this);">
+                                <a4j:support event="onchange" 
+                                             focus="UniurgVeiculosNome"
+                                             ignoreDupResponses="true"
+                                             reRender="codUniurgVeiculos, UniurgVeiculosNome, suggestionUniurgVeiculos, outputMessagesInIndex"
+                                             requestDelay="500"
+                                             action="#{uniurgVeiculosBean.findBykeyEntity}">
+                                    <a4j:actionparam noEscape="true"
+                                                     value="(document.getElementById('formPesquisa:codUniurgVeiculos').value == '' ? '-11111' : document.getElementById('formPesquisa:codUniurgVeiculos').value)"
+                                                     assignTo="#{uniurgVeiculosBean.entidadePesquisa.codVeiculo}"/>
+                                </a4j:support>
+                            </h:inputText>
+                            <a4j:region>
+                                <h:inputText id="UniurgVeiculosNome" 
+                                             value="#{uniurgVeiculosBean.entidadePesquisa.nomeVeiculo}" 
+                                             size="50" 
+                                             maxlength="30" 
+                                             style="text-transform: uppercase;"
+                                             onkeypress="return(soEntraEspacoLetrasNumero(event,this));"
+                                             onmouseout="soEntraEspacoLetrasNumero(this);"
+                                             styleClass="#{(!uniurgVeiculosBean.PESQUISAR)? 'disabledVerde' : ''}"
+                                             readonly="#{!uniurgVeiculosBean.PESQUISAR}">
+                                    <a4j:support event="onchange"  
+                                                 action="#{uniurgVeiculosBean.autoCompleteEntity(uniurgVeiculosBean.entidadePesquisa.nomeVeiculo)}"
+                                                 focus="codUniurgVeiculos" 
+                                                 reRender="codUniurgVeiculos, UniurgVeiculosNome, suggestionUniurgVeiculos,outputMessagesInIndex"/>
+                                </h:inputText>
+                                <rich:suggestionbox id="suggestionUniurgVeiculos" for="UniurgVeiculosNome" nothingLabel="Nenhum registro encontrado."
+                                                    suggestionAction="#{uniurgVeiculosBean.autoCompleteEntity}" var="_uniurgVeiculos" width="350" height="300"
+                                                    minChars="3" requestDelay="800" frequency="0.1" ignoreDupResponses="true">
+                                    <h:column>
+                                        <h:outputText value="#{_uniurgVeiculos.nomeVeiculo}" />
+                                    </h:column>
+                                    <a4j:support event="onselect" focus="codUniurgVeiculos" ajaxSingle="true" limitToList="true"
+                                                 action="#{uniurgVeiculosBean.setEntidadePesquisa(_uniurgVeiculos)}"
+                                                 reRender="codUniurgVeiculos, UniurgVeiculosNome, suggestionUniurgVeiculos"/>
+                                </rich:suggestionbox>
+                            </a4j:region>
+                        </ui:decorate>
+						
+						-->
+						
+						</h:panelGrid>
+
+						<div class="actionButtonsCenter" style="margin-top: 3px" >
+						<a4j:commandButton id="btnPesquisa" value="Pesquisar"
+							reRender="formPesquisa,listaOutputPanel,panel[DOMAIN],formLista,outputMessagesInIndex"
+							action="#{[BEAN].pesquisaPaginada}"
+							style="background: #cad7e2 url(../figuras/icon_buscar.png) no-repeat; padding-left:25px; height:20px;"
+							oncomplete="setFocus('${focus}');"/>
+						<a4j:commandButton value="Nova Pesquisa" ajaxSingle="true"
+							action="#{[BEAN].limpa}"
+							style="background: #cad7e2 url(../figuras/icon_limpar.png) no-repeat; padding-left:25px; height:20px;"
+							reRender="messagesRegion, [DOMAIN]TogglePanel, listaOutputPanel, outputMessagesInIndex,formPesquisa, panel[DOMAIN]" />
+						</div>
+					</a4j:form>
+			</rich:panel>
+			<a4j:outputPanel id="listaOutputPanel" >
+	    		<a4j:include id="listaFormIndex" viewId="/pages/[PASTA]/list.xhtml"/>
+				<a4j:include id="formIndex" viewId="/pages/[PASTA]/form.xhtml"/>
+				<ui:decorate template="../templates/templateModalDeleteGenerics.xhtml">
+		        	<ui:param name="NomeEntidade" value="[DOMAIN]"/>
+		        	<ui:param name="bean" value="#{[BEAN]}" />
+		        </ui:decorate>
+				<ui:decorate template="../templates/templateModalAlteraGeneric.xhtml">
+		        	<ui:param name="NomeEntidade" value="[DOMAIN]"/>
+		        	<ui:param name="bean" value="#{[BEAN]}" />
+		        	<ui:param name="entidade" value="#{[BEAN].entidade}" />
+		        </ui:decorate>
+				<ui:include src="../templates/templateModalProgress.xhtml" />
+			</a4j:outputPanel>
+		</div>
+    </ui:define>
+</ui:composition>

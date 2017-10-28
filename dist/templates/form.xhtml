@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j">
+
+ 	<rich:modalPanel id="mpForm[DOMAIN]" 
+		width="700" height="100"
+                autosized="true" resizeable="false" moveable="false" onshow="focusFirst('formEntidade');"  >
+		<f:facet name="header">
+			<h:panelGroup>
+				<h:outputText value="Inclusão - Veiculo" 	 rendered="#{[BEAN].CADASTRAR}" />
+				<h:outputText value="Alteração - Veiculo" 	 rendered="#{[BEAN].ALTERAR}" />
+				<h:outputText value="Detalhamento - Veiculo" rendered="#{[BEAN].DETALHAR}" />
+			</h:panelGroup>
+		</f:facet>
+
+		<ui:decorate template="../templates/templateMsgForm.xhtml">
+			<ui:param name="bean" value="#{[BEAN]}" />
+		</ui:decorate>
+
+            <a4j:form id="formEntidade">
+			<rich:panel switchType="client" oncollapse="return false;" label="" id="form2single" >
+				<h:panelGrid cellpadding="0" cellspacing="0">
+					<!--OS INPUTS IRÃO FICAR AQUI. OS EXEMPLOS A SEGUIR É REFERENTE A TABELA 
+						UNIURG_VEICULOS.
+						
+                     <ui:decorate template="../templates/edit.xhtml">
+                        <ui:define name="label">Unimed:</ui:define>
+                        <ui:param name="idComponente" value="codUnimedForm" />
+                        <ui:param name="cssColumnClasses" value="editCollum92pxRigth" />
+                        <h:inputText id="codUnimedForm" value="#{uniurgVeiculosBean.entidade.paramUnimed.codUnimed}"
+                                     rendered="#{uniurgVeiculosBean.CADASTRAR}"	size="12" maxlength="10"
+                                     required="true"
+                                     requiredMessage="Código unimed não informado."
+                                     styleClass="#{validationUtil.invalid('codUnimedForm', facesContext) ? 'invalido' : ''}"
+                                     style="text-transform: uppercase;"  
+                                     onkeypress="return(soEntraLetrasNumero(event,this));" 
+                                     onmouseout="soEntraLetrasNumero(this);"/>
+                        <h:outputText id="codUnimedDetalhar" value="#{uniurgVeiculosBean.entidade.paramUnimed.codUnimed}" 
+                                      rendered="#{!uniurgVeiculosBean.CADASTRAR}" />
+                    </ui:decorate>
+					
+					<ui:decorate template="../templates/edit.xhtml">
+                        <ui:define name="label">Código:</ui:define> 
+                        <ui:param name="idComponente" value="veiculoCod" />
+                        <ui:param name="cssColumnClasses" value="editCollum92pxRigth" />
+                        <h:inputText id="veiculoCod" value="#{uniurgVeiculosBean.entidade.codVeiculo}"
+                                     rendered="#{uniurgVeiculosBean.CADASTRAR}"	size="12" maxlength="10"
+                                     styleClass="#{validationUtil.invalid('veiculoCod', facesContext) ? 'invalido' : ''}"
+                                     style="text-transform: uppercase;"  
+                                     onkeypress="return(soEntraLetrasNumero(event,this));" 
+                                     onmouseout="soEntraLetrasNumero(this);"/>
+                        <h:outputText id="veiculoCodDetalhar" value="#{uniurgVeiculosBean.entidade.codVeiculo}" 
+                                      rendered="#{!uniurgVeiculosBean.CADASTRAR}" />
+                    </ui:decorate>
+                    <ui:decorate template="../templates/edit.xhtml">
+                        <ui:define name="label">Nome:</ui:define>
+	                    <ui:param name="idComponente" value="nome" />
+                        <ui:param name="cssColumnClasses" value="editCollum92pxRigth" />
+                        <h:inputText id="nome" value="#{uniurgVeiculosBean.entidade.nomeVeiculo}"
+                                     rendered="#{!uniurgVeiculosBean.DETALHAR}" size="60" maxlength="40" label="Nome"
+								     styleClass="#{validationUtil.invalid('nome', facesContext) ? 'invalido' : ''}"
+								     style="text-transform: uppercase;"
+                                     onkeypress="return(soEntraEspacoLetrasNumero(event,this));"
+                                     onmouseout="soEntraEspacoLetrasNumero(this);"
+                                                                     />
+                        <h:outputText id="UniurgVeiculosNomeDetalhar" value="#{uniurgVeiculosBean.entidade.nomeVeiculo}"
+                                      rendered="#{uniurgVeiculosBean.DETALHAR}"/>
+                    </ui:decorate>
+                    <ui:decorate template="../templates/edit.xhtml">
+                        <ui:define name="label">Versão:</ui:define>
+                        <ui:param name="idComponente" value="versao" />
+                        <ui:param name="cssColumnClasses" value="editCollum92pxRigth" />
+                        <h:inputText id="versao" value="#{uniurgVeiculosBean.entidade.versao}"
+                                     rendered="#{!uniurgVeiculosBean.DETALHAR}" size="12" maxlength="10"
+                                     styleClass="#{validationUtil.invalid('versao', facesContext) ? 'invalido' : ''}"
+                                     style="text-transform: uppercase;"
+                                     onkeypress="return(soEntraEspacoLetrasNumero(event,this));"
+                                     onmouseout="soEntraEspacoLetrasNumero(this);"
+                                     />
+                        <h:outputText id="versaoDetalhar" value="#{uniurgVeiculosBean.entidade.versao}"
+                                      rendered="#{uniurgVeiculosBean.DETALHAR}"/>
+	                </ui:decorate>
+					
+					
+					-->
+				</h:panelGrid>
+			</rich:panel>
+			
+			<ui:decorate template="../templates/templateButtonsForm.xhtml">
+				<ui:param name="bean" value="#{[BEAN]}" />
+				<ui:param name="NomeEntidade" value="[DOMAIN]" />
+			</ui:decorate>
+		</a4j:form>
+	</rich:modalPanel>
+</ui:composition>
